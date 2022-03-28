@@ -13,3 +13,16 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+bin/
+bin/app
+log
+logs
+*.log
+*.logs
+.idea
+.idea/
+
+.DS_Store
+**/.DS_Store
+.DS_Store?

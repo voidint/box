@@ -1,5 +1,13 @@
 package condexpr
 
+// Any 若expr成立，则返回a；否则返回b。
+func Any[T any](expr bool, a, b T) T {
+	if expr {
+		return a
+	}
+	return b
+}
+
 // Str 若expr成立，则返回a；否则返回b。
 func Str(expr bool, a, b string) string {
 	if expr {
