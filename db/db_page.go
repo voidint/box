@@ -33,7 +33,7 @@ func (pg *Page[INT]) Offset() INT {
 	return (pg.pageNo - 1) * pg.pageSize
 }
 
-// 返回分页页号
+// PageNo 返回分页页号
 func (pg *Page[INT]) PageNo() INT {
 	return pg.pageNo
 }

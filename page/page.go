@@ -6,7 +6,9 @@ import (
 )
 
 // Integer 整型类型约束
-type Integer constraints.Integer
+type Integer interface {
+	constraints.Integer
+}
 
 // Page 分页结构定义
 type Page[T any, INT Integer] struct {
@@ -58,7 +60,7 @@ type pagerImpl[T any, INT Integer] struct {
 	records      []T
 }
 
-// BuildLimiter 返回数据库分页值
+// BuildDBPage 返回数据库分页
 func (p *pagerImpl[T, INT]) BuildDBPage() *db.Page[INT] {
 	return db.NewPage(p.pageNo, p.pageSize)
 }

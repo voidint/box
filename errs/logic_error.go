@@ -37,7 +37,7 @@ func NewRawLogicErr(code int, message string) *LogicError {
 }
 
 // NewLogicErr 返回指定编码的业务逻辑错误
-func NewLogicErr(code int, lang string, messageID string, tplData ...interface{}) *LogicError {
+func NewLogicErr(code int, lang string, messageID string, tplData ...any) *LogicError {
 	msg, err := i18n.Tr(lang, messageID, tplData...)
 	if err != nil {
 		msg = messageID
@@ -46,27 +46,27 @@ func NewLogicErr(code int, lang string, messageID string, tplData ...interface{}
 }
 
 // New400LogicError 返回400错误（非法参数）
-func New400LogicError(lang string, messageID string, tplData ...interface{}) *LogicError {
+func New400LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusBadRequest, lang, messageID, tplData...)
 }
 
 // New401LogicError 返回401错误（未认证）
-func New401LogicError(lang string, messageID string, tplData ...interface{}) *LogicError {
+func New401LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusUnauthorized, lang, messageID, tplData...)
 }
 
 // New403LogicError 返回403错误（未授权）
-func New403LogicError(lang string, messageID string, tplData ...interface{}) *LogicError {
+func New403LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusForbidden, lang, messageID, tplData...)
 }
 
 // New404LogicError 返回404错误（资源不存在）
-func New404LogicError(lang string, messageID string, tplData ...interface{}) *LogicError {
+func New404LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusNotFound, lang, messageID, tplData...)
 }
 
 // New500LogicError 返回500错误（服务器内部错误）
-func New500LogicError(lang string, messageID string, tplData ...interface{}) *LogicError {
+func New500LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusInternalServerError, lang, messageID, tplData...)
 }
 

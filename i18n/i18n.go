@@ -60,7 +60,7 @@ func LoadLanguageBundleFromEmbedFS(dirName string, dir embed.FS) (err error) {
 
 // LoadedLangTags 返回已注册的语言标签
 func LoadedLangTags() (items []string) {
-	pool.Range(func(k, v interface{}) bool {
+	pool.Range(func(k, v any) bool {
 		items = append(items, k.(string))
 		return true
 	})
@@ -73,7 +73,7 @@ var (
 )
 
 // TrNoErr 将指定ID的文本翻译成对应语言的文本。若发生错误导致翻译失败，则返回入参的messageID。
-func TrNoErr(lang string, messageID string, tplData ...interface{}) string {
+func TrNoErr(lang string, messageID string, tplData ...any) string {
 	s, _ := Tr(lang, messageID, tplData...)
 	return s
 }
@@ -82,7 +82,7 @@ func TrNoErr(lang string, messageID string, tplData ...interface{}) string {
 const DefaultLang = "zh-Hans"
 
 // Tr 将指定ID的文本翻译成对应语言的文本。若发生错误导致翻译失败，则返回入参的messageID和具体的错误。
-func Tr(lang string, messageID string, tplData ...interface{}) (string, error) {
+func Tr(lang string, messageID string, tplData ...any) (string, error) {
 	// 1、规整语言标签。lang参数标准为 http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry 中所定义的语言标签
 	if lang == "" {
 		lang = DefaultLang
@@ -105,7 +105,7 @@ func Tr(lang string, messageID string, tplData ...interface{}) (string, error) {
 		if size < 2 || size%2 != 0 { // 保证是kv形式键值对
 			return messageID, ErrInvalidTemplateData
 		}
-		pairs := make(map[string]interface{}, len(tplData)/2)
+		pairs := make(map[string]any, len(tplData)/2)
 		for i := 0; i < len(tplData)-1; i = i + 2 {
 			k, ok := tplData[i].(string) // 键为字符串类型，指代的是模板变量名。
 			if !ok {
