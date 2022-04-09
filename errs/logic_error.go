@@ -9,12 +9,12 @@ import (
 
 // LogicError 业务逻辑错误
 type LogicError struct {
-	code    int
+	code    int16
 	message string
 }
 
 // Code 返回错误编码
-func (e LogicError) Code() int {
+func (e LogicError) Code() int16 {
 	return e.code
 }
 
@@ -29,7 +29,7 @@ func (e LogicError) Error() string {
 }
 
 // NewRawLogicErr 返回指定编码的业务逻辑错误
-func NewRawLogicErr(code int, message string) *LogicError {
+func NewRawLogicErr(code int16, message string) *LogicError {
 	return &LogicError{
 		code:    code,
 		message: message,
@@ -37,7 +37,7 @@ func NewRawLogicErr(code int, message string) *LogicError {
 }
 
 // NewLogicErr 返回指定编码的业务逻辑错误
-func NewLogicErr(code int, lang string, messageID string, tplData ...any) *LogicError {
+func NewLogicErr(code int16, lang string, messageID string, tplData ...any) *LogicError {
 	msg, err := i18n.Tr(lang, messageID, tplData...)
 	if err != nil {
 		msg = messageID
