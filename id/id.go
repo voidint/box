@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/bwmarrin/snowflake"
-	"github.com/rs/zerolog/log"
 )
 
 var defaultNode *Node // 默认节点
@@ -36,7 +35,6 @@ type Node struct {
 func NewNode(nodeID int64) (*Node, error) {
 	core, err := snowflake.NewNode(nodeID)
 	if err != nil {
-		log.Error().Int64("nodeID", nodeID).Str("err", err.Error()).Msg("New node error")
 		return nil, err
 	}
 	return &Node{

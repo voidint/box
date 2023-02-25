@@ -9,7 +9,6 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/text/language"
 )
 
@@ -20,7 +19,6 @@ func LoadLanguageBundleFromEmbedFS(dirName string, dir embed.FS) (err error) {
 	var filenames []string
 	entries, err := dir.ReadDir(dirName)
 	if err != nil {
-		log.Err(err).Msgf("Failed to read %s dir", dirName)
 		return err
 	}
 	for _, entry := range entries {
@@ -40,17 +38,13 @@ func LoadLanguageBundleFromEmbedFS(dirName string, dir embed.FS) (err error) {
 		}
 		langTag = strings.TrimSuffix(filename, ".toml")
 
-		log.Info().Str("tag", langTag).Msg("Begin parsing language tag")
-
 		tag, err = language.Parse(langTag)
 		if err != nil {
-			log.Err(err).Str("tag", langTag).Msg("Language tag parsing failed")
 			return err
 		}
 		bundle := i18n.NewBundle(tag)
 		bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 		if _, err = bundle.ParseMessageFileBytes(data, filename); err != nil {
-			log.Err(err).Str("filename", filename).Msg("Failed to parse message file")
 			return err
 		}
 		pool.Store(langTag, bundle)
@@ -90,11 +84,9 @@ func Tr(lang string, messageID string, tplData ...any) (string, error) {
 	// 2、查找语言包
 	bundle, err := findBundle(lang)
 	if err == ErrBundleNotFound && lang != DefaultLang { // 若该语种暂未支持，则使用简体中文。
-		// log.Warn().Str("lang", lang).Msg("The language bundle not found, use default language bundle.")
 		bundle, err = findBundle(DefaultLang)
 	}
 	if err != nil {
-		log.Err(err).Str("lang", lang).Str("messageID", messageID).Msg("The language bundle not found, cannot be translated.")
 		return messageID, err
 	}
 	// 3、翻译
@@ -117,7 +109,6 @@ func Tr(lang string, messageID string, tplData ...any) (string, error) {
 	}
 	str, err := i18n.NewLocalizer(bundle, lang).Localize(&c)
 	if err != nil {
-		log.Err(err).Str("lang", lang).Str("messageID", messageID).Interface("tplData", tplData).Msg("Translation failed")
 		return messageID, err
 	}
 	return str, nil
