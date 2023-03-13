@@ -40,3 +40,38 @@ func TestExtractFromPtr(t *testing.T) {
 		})
 	}
 }
+
+func TestNonEmptyToPtr(t *testing.T) {
+	s1 := " 	"
+	s2 := "box"
+
+	type args struct {
+		v string
+	}
+	tests := []struct {
+		name string
+		args args
+		want *string
+	}{
+		{
+			name: "入参是空字符串",
+			args: args{v: ""},
+			want: nil,
+		},
+		{
+			name: "入参是空白字符串",
+			args: args{v: s1},
+			want: &s1,
+		},
+		{
+			name: "入参是非空字符串",
+			args: args{v: s2},
+			want: &s2,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, NonEmptyToPtr(tt.args.v))
+		})
+	}
+}
