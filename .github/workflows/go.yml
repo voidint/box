@@ -23,7 +23,6 @@ jobs:
     
     - name: Install dependencies
       run: |
-        go get .
         go get github.com/BurntSushi/toml@v1.2.1
         go get github.com/bwmarrin/snowflake@v0.3.0
         go get github.com/golang-module/carbon/v2@v2.2.3
