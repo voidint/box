@@ -33,6 +33,15 @@ func Last30Days() (days []carbon.Carbon) {
 	return LastFewDays(30)
 }
 
+// WithinMonth 返回指定年月的起止时间
+func WithinMonth(year int, month int) (start, end carbon.Carbon) {
+	if month < 1 || month > 12 {
+		panic("invalid month")
+	}
+	c := carbon.CreateFromDate(year, month, 1)
+	return c.StartOfMonth(), c.EndOfMonth()
+}
+
 // WithinAFewDays 返回若干天内的起止时间
 func WithinAFewDays(n int) (start, end carbon.Carbon) {
 	now := carbon.Now()
