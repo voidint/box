@@ -24,3 +24,15 @@ func TestExtractFromPtr(t *testing.T) {
 	assert.Equal(t, v6, ExtractFromPtr(&v6))
 	assert.Equal(t, v7, ExtractFromPtr(&v7))
 }
+
+func TestJoin(t *testing.T) {
+	assert.Equal(t, "", Join([]uint64{}, "|"))
+	assert.Equal(t, "1", Join([]uint64{1}, "|"))
+	assert.Equal(t, "1|2", Join([]uint64{1, 2}, "|"))
+	assert.Equal(t, "1|2|3", Join([]uint64{1, 2, 3}, "|"))
+	assert.Equal(t, "1|2|3|4", Join([]uint64{1, 2, 3, 4}, "|"))
+	assert.Equal(t, "1234", Join([]uint64{1, 2, 3, 4}, ""))
+	assert.Equal(t, "1 2 3 4", Join([]uint64{1, 2, 3, 4}, " "))
+	assert.Equal(t, "1|2|3|4", Join([]float64{1, 2, 3, 4}, "|"))
+	assert.Equal(t, "1.12|2.23|3.34|4.45", Join([]float64{1.12, 2.23, 3.34, 4.45}, "|"))
+}

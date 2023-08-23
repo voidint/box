@@ -1,11 +1,12 @@
 package numeric
 
-type Number interface {
-	~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~float32 | ~float64
-}
+import (
+	"fmt"
+	"strings"
+)
 
 // PositiveToPtr 若入参v大于零，则返回其指针；否则返回nil。
-func PositiveToPtr[T Number](v T) *T {
+func PositiveToPtr[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~float32 | ~float64](v T) *T {
 	if v > 0 {
 		return &v
 	}
@@ -22,9 +23,36 @@ func PositiveUint8ToUint32Ptr(v uint8) *uint32 {
 }
 
 // ExtractFromPtr 若入参指针为nil，则返回0；否则，返回指针指向的内存所存储的值。
-func ExtractFromPtr[T Number](p *T) T {
+func ExtractFromPtr[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~float32 | ~float64](p *T) T {
 	if p == nil {
 		return 0
 	}
 	return *p
+}
+
+type Number interface {
+	~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~int8 | ~int16 | ~int32 | ~int64 | ~int | ~float32 | ~float64
+}
+
+// Join 返回由指定分隔符所连接而成的字符串
+func Join[T Number](items []T, sep string) string {
+	switch len(items) {
+	case 0:
+		return ""
+	case 1:
+		return fmt.Sprintf("%v", items[0])
+	case 2:
+		return fmt.Sprintf("%v%s%v", items[0], sep, items[1])
+	case 3:
+		return fmt.Sprintf("%v%s%v%s%v", items[0], sep, items[1], sep, items[2])
+	default:
+		var buf strings.Builder
+		for i := range items {
+			buf.WriteString(fmt.Sprintf("%v", items[i]))
+			if i != len(items)-1 {
+				buf.WriteString(sep)
+			}
+		}
+		return buf.String()
+	}
 }
