@@ -4,23 +4,42 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+// WithMaxPageSize 设置分页大小上限阈值
+func WithMaxPageSize[INT constraints.Integer](maxPageSize INT) func(*Page[INT]) {
+	return func(pg *Page[INT]) {
+		pg.maxPageSize = maxPageSize
+	}
+}
+
 // Page 分页
 type Page[INT constraints.Integer] struct {
-	pageNo, pageSize INT
+	pageNo, pageSize, maxPageSize INT
 }
 
 // NewPage 返回分页实例
-func NewPage[INT constraints.Integer](pageNo, pageSize INT) (pg *Page[INT]) {
-	if pageNo <= 0 {
-		pageNo = 1
-	}
-	if pageSize <= 0 {
-		pageSize = 10
-	}
-	return &Page[INT]{
+func NewPage[INT constraints.Integer](pageNo, pageSize INT, opts ...func(*Page[INT])) (pg *Page[INT]) {
+	pg = &Page[INT]{
 		pageNo:   pageNo,
 		pageSize: pageSize,
 	}
+
+	if pageNo <= 0 {
+		pg.pageNo = 1
+	}
+
+	if pageSize <= 0 {
+		pg.pageSize = 10
+	}
+
+	for _, setter := range opts {
+		setter(pg)
+	}
+
+	if pg.maxPageSize > 0 && pg.pageSize > pg.maxPageSize {
+		pg.pageSize = pg.maxPageSize
+	}
+
+	return
 }
 
 // Limit 返回分页大小
