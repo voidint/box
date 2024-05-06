@@ -11,6 +11,7 @@ import (
 type LogicError struct {
 	code    int16
 	message string
+	cause   error
 }
 
 // Code 返回错误编码
@@ -25,15 +26,39 @@ func (e LogicError) Message() string {
 
 // Error 实现Error方法
 func (e LogicError) Error() string {
-	return fmt.Sprintf("[%d]%s", e.code, e.message)
+	if e.cause == nil {
+		return fmt.Sprintf("[%d]%s", e.code, e.message)
+	}
+	return fmt.Sprintf("[%d]%s\n%+v", e.code, e.message, e.cause)
+}
+
+// SetCause 设置根因
+func (e *LogicError) SetCause(err error) *LogicError {
+	e.cause = err
+	return e
+}
+
+// GetCause 返回根因错误
+func (e *LogicError) GetCause() error {
+	return e.cause
+}
+
+func WithCause(err error) func(*LogicError) {
+	return func(e *LogicError) {
+		e.cause = err
+	}
 }
 
 // NewRawLogicErr 返回指定编码的业务逻辑错误
-func NewRawLogicErr(code int16, message string) *LogicError {
-	return &LogicError{
+func NewRawLogicErr(code int16, message string, opts ...func(*LogicError)) *LogicError {
+	one := LogicError{
 		code:    code,
 		message: message,
 	}
+	for _, opt := range opts {
+		opt(&one)
+	}
+	return &one
 }
 
 // NewLogicErr 返回指定编码的业务逻辑错误
