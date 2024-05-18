@@ -43,6 +43,18 @@ func (ob OrderBy) String() string {
 	return buf.String()
 }
 
+func (ob OrderBy) Strings() []string {
+	if len(ob) <= 0 {
+		return nil
+	}
+
+	items := make([]string, 0, len(ob))
+	for i := range ob {
+		items = append(items, ob[i].String())
+	}
+	return items
+}
+
 // OneOrderBy 构建仅包含一对的orderBy
 func OneOrderBy(name string, direction OrderByDirection) OrderBy {
 	return OrderBy([]OrderByPair{
