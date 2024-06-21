@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/golang-module/carbon/v2 v2.2.3
+	github.com/guregu/null/v5 v5.0.0
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/exp v0.0.0-20230224173230-c95f2b4c22f2

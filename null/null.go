@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"gopkg.in/guregu/null.v4"
+	"github.com/guregu/null/v5"
 )
 
 // MustIntFromUint64Ptr 若入参为nil，则返回无效的null.Int；
