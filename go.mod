@@ -3,14 +3,14 @@ module github.com/voidint/box
 go 1.20
 
 require (
-	github.com/BurntSushi/toml v1.2.1
+	github.com/BurntSushi/toml v1.4.0
 	github.com/bwmarrin/snowflake v0.3.0
-	github.com/golang-module/carbon/v2 v2.2.3
+	github.com/dromara/carbon/v2 v2.5.2
 	github.com/guregu/null/v5 v5.0.0
-	github.com/nicksnyder/go-i18n/v2 v2.2.1
-	github.com/stretchr/testify v1.8.1
+	github.com/nicksnyder/go-i18n/v2 v2.4.1
+	github.com/stretchr/testify v1.10.0
 	golang.org/x/exp v0.0.0-20230224173230-c95f2b4c22f2
-	golang.org/x/text v0.7.0
+	golang.org/x/text v0.21.0
 	google.golang.org/grpc v1.53.0
 	gopkg.in/guregu/null.v4 v4.0.0
 )

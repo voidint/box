@@ -25,7 +25,7 @@ jobs:
       run: |
         go get github.com/BurntSushi/toml@v1.2.1
         go get github.com/bwmarrin/snowflake@v0.3.0
-        go get github.com/golang-module/carbon/v2@v2.2.3
+        go get github.com/dromara/carbon/v2@v2.2.3
         go get github.com/nicksnyder/go-i18n/v2@v2.2.1
         go get github.com/stretchr/testify@v1.8.1
         go get golang.org/x/exp

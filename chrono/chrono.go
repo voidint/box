@@ -3,7 +3,7 @@ package chrono
 import (
 	"time"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 )
 
 // LastFewDays 返回最近N天的时间列表
