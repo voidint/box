@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/constraints"
 	"golang.org/x/sync/singleflight"
 )
 
@@ -29,12 +28,17 @@ var (
 type Cache interface {
 	Del(ctx context.Context, keys ...string) (affected int64, err error)
 	Get(ctx context.Context, key string) (val []byte, err error)
-	GetAsUint64(ctx context.Context, key string) (val uint64, err error)
 	Set(ctx context.Context, key string, val []byte, expire time.Duration) error
+	GetAsUint64(ctx context.Context, key string) (val uint64, err error)
+	SetUint64(ctx context.Context, key string, val uint64, expire time.Duration) error
 	IsKeyNotFound(err error) bool
 }
 
-type CacheableEntity[INT constraints.Integer] interface {
+type UnsignedInt interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
+
+type CacheableEntity[INT UnsignedInt] interface {
 	ID() INT
 }
 
@@ -54,7 +58,7 @@ func DelCachedEntity(ctx context.Context, cache Cache, key string) (affected int
 // 查找顺序：主键ID --> 缓存中实体对象 --> 数据库中实体对象。
 // 局限：
 // 1、缓存 key格式无法自定义且不够内聚
-func GetEntityByID[T CacheableEntity[INT], INT constraints.Integer](
+func GetEntityByID[T CacheableEntity[INT], INT UnsignedInt](
 	ctx context.Context,
 	cache Cache,
 	entityKeyPrefix string,
@@ -108,7 +112,7 @@ func GetEntityByID[T CacheableEntity[INT], INT constraints.Integer](
 }
 
 // GetEntitiesByID 从Redis缓存中读取指定实体列表。若缓存中不存在，则从指定方法中读取并存入Redis缓存。
-func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Integer](
+func GetEntitiesByID[T CacheableEntity[INT], INT UnsignedInt](
 	ctx context.Context,
 	cache Cache,
 	entityKeyPrefix string,
@@ -168,7 +172,7 @@ func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Integer](
 
 // UniqueKey 唯一索引约束
 type UniqueKey interface {
-	~string | constraints.Integer
+	~string | UnsignedInt
 }
 
 // GetEntityByUniqueKey 返回唯一索引值对应的实体对象。
@@ -177,7 +181,7 @@ type UniqueKey interface {
 // 1、Redis key格式无法自定义
 // 2、不支持联合唯一索引
 // 3、多一次查询
-func GetEntityByUniqueKey[T CacheableEntity[INT], INT constraints.Integer, UK UniqueKey](
+func GetEntityByUniqueKey[T CacheableEntity[INT], INT UnsignedInt, UK UniqueKey](
 	ctx context.Context,
 	cache Cache,
 	entityKeyPrefix string,
@@ -218,7 +222,7 @@ func GetEntityByUniqueKey[T CacheableEntity[INT], INT constraints.Integer, UK Un
 		return nil, errors.WithStack(err)
 	}
 	// 3、保存唯一索引值（键）与主键ID（值）关系
-	if err = cache.Set(ctx, ukKey, fmt.Appendf(nil, "%d", id), 0); err != nil {
+	if err = cache.SetUint64(ctx, ukKey, uint64(id), -1); err != nil {
 		return nil, errors.WithStack(err)
 	}
 	// 4、根据主键ID尝试返回实体对象
