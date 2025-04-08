@@ -1,24 +1,35 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package container
 
 var setValue = struct{}{}
 
-// Set 由不重复的T组成的集合。该集合非线程安全。
+// Set implements a generic collection of unique elements with type safety.
+// The zero value is not usable, always create instances via NewSet constructor.
+// This implementation is not thread-safe and requires external synchronization
+// when used in concurrent environments.
 type Set[T comparable] struct {
 	items map[T]struct{}
 }
 
-// NewSet 返回指定容量的Set集合。
+// NewSet constructs a Set instance with optional initial capacity and elements.
 func NewSet[T comparable](capacity int, elements ...T) *Set[T] {
 	var items map[T]struct{}
 	if capacity <= 0 {
@@ -33,7 +44,7 @@ func NewSet[T comparable](capacity int, elements ...T) *Set[T] {
 	}
 }
 
-// Add 往Set集合中添加元素。
+// Add inserts one or multiple elements into the set.
 func (set *Set[T]) Add(elements ...T) *Set[T] {
 	for i := range elements {
 		set.items[elements[i]] = setValue
@@ -41,7 +52,7 @@ func (set *Set[T]) Add(elements ...T) *Set[T] {
 	return set
 }
 
-// Remove 移除元素
+// Remove deletes specified elements from the set.
 func (set *Set[T]) Remove(elements ...T) *Set[T] {
 	for i := range elements {
 		delete(set.items, elements[i])
@@ -49,7 +60,7 @@ func (set *Set[T]) Remove(elements ...T) *Set[T] {
 	return set
 }
 
-// Elements 返回当前Set集合中的所有元素。
+// Elements returns all set members as a new slice.
 func (set *Set[T]) Elements() []T {
 	all := make([]T, 0, len(set.items))
 	for k := range set.items {
@@ -58,18 +69,18 @@ func (set *Set[T]) Elements() []T {
 	return all
 }
 
-// Contains 返回是否包含当前元素的布尔值
+// Contains checks membership of an element in the set.
 func (set *Set[T]) Contains(element T) bool {
 	_, ok := set.items[element]
 	return ok
 }
 
-// Length 返回当前的元素个数
+// Length returns the cardinality (element count) of the set.
 func (set *Set[T]) Length() int {
 	return len(set.items)
 }
 
-// IsEmpty 返回当前集合是否为空
+// IsEmpty checks for an empty set condition.
 func (set *Set[T]) IsEmpty() bool {
 	return len(set.items) <= 0
 }

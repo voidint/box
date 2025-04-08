@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package page
 
@@ -16,23 +24,31 @@ import (
 	"github.com/voidint/box/db"
 )
 
-// Page 分页结构定义
+// Page defines the pagination structure containing metadata and records
 type Page[T any, INT constraints.Unsigned] struct {
-	PageNo       INT `json:"pageNo"` // 若序列化时想要使用其他的命名风格，建议使用 github.com/json-iterator/go 库中的 extra.SetNamingStrategy() 函数注册自定义命名策略。
-	PageSize     INT `json:"pageSize"`
-	TotalPages   INT `json:"totalPages"`
-	TotalRecords INT `json:"totalRecords"`
-	Records      []T `json:"records"`
+	PageNo INT `json:"pageNo"` // PageNo specifies the current page number (1-based). For custom JSON field naming,
+	// use extra.SetNamingStrategy() from github.com/json-iterator/go.
+	PageSize     INT `json:"pageSize"`     // PageSize indicates the number of items per page
+	TotalPages   INT `json:"totalPages"`   // TotalPages holds the calculated total number of pages
+	TotalRecords INT `json:"totalRecords"` // TotalRecords contains the complete count of dataset records
+	Records      []T `json:"records"`      // Records stores the slice of items for the current page
 }
 
-// Pager 分页接口
+// Pager defines the interface for pagination operations
 type Pager[T any, INT constraints.Unsigned] interface {
 	AddRecords(records ...T)
 	BuildDBPage() *db.Page[INT]
 	BuildPage() *Page[T, INT]
 }
 
-// NewPager 构建一个分页对象
+// NewPager constructs a paginator instance with sanitized input parameters
+//
+// Parameters:
+//   - pageNo: current page number (1-based index)
+//   - pageSize: number of items per page
+//   - totalRecords: total number of records
+//
+// Returns a properly configured Pager instance
 func NewPager[T any, INT constraints.Unsigned](pageNo, pageSize, totalRecords INT) Pager[T, INT] {
 	if pageNo <= 0 {
 		pageNo = 1
@@ -57,7 +73,6 @@ func NewPager[T any, INT constraints.Unsigned](pageNo, pageSize, totalRecords IN
 	}
 }
 
-// pagerImpl 实际的分页对象
 type pagerImpl[T any, INT constraints.Unsigned] struct {
 	pageNo       INT
 	pageSize     INT
@@ -66,17 +81,17 @@ type pagerImpl[T any, INT constraints.Unsigned] struct {
 	records      []T
 }
 
-// BuildDBPage 返回数据库分页
+// BuildDBPage constructs database pagination parameters for query execution
 func (p *pagerImpl[T, INT]) BuildDBPage() *db.Page[INT] {
 	return db.NewPage(p.pageNo, p.pageSize)
 }
 
-// AddRecords 往分页中追加记录
+// AddRecords appends records to the current page's collection
 func (p *pagerImpl[T, INT]) AddRecords(records ...T) {
 	p.records = append(p.records, records...)
 }
 
-// BuildPage 构造一个分页对象并返回
+// BuildPage assembles and returns the complete pagination structure
 func (p *pagerImpl[T, INT]) BuildPage() *Page[T, INT] {
 	return &Page[T, INT]{
 		PageNo:       p.pageNo,
@@ -87,7 +102,7 @@ func (p *pagerImpl[T, INT]) BuildPage() *Page[T, INT] {
 	}
 }
 
-// EmptyPage 返回空分页
+// EmptyPage initializes a pagination structure with zero values
 func EmptyPage[T any, INT constraints.Unsigned](pageNo, pageSize INT) *Page[T, INT] {
 	return &Page[T, INT]{
 		PageNo:       pageNo,
@@ -98,7 +113,6 @@ func EmptyPage[T any, INT constraints.Unsigned](pageNo, pageSize INT) *Page[T, I
 	}
 }
 
-// mustCalculateTotalPages 计算总分页数
 func mustCalculateTotalPages[INT constraints.Unsigned](pageSize, totalRecords INT) (totalPages INT) {
 	if pageSize <= 0 {
 		panic("page size should be positive integer")

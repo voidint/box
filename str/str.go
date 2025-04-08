@@ -1,17 +1,26 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package str
 
-// NonEmptyToPtr 若入参v非空字符串，则返回其指针；否则返回nil。
+// NonEmptyToPtr returns a pointer to the string if it's non-empty, otherwise returns nil.
+// Useful for converting string values to nullable pointers in API structs.
 func NonEmptyToPtr(v string) *string {
 	if v != "" {
 		return &v
@@ -19,7 +28,8 @@ func NonEmptyToPtr(v string) *string {
 	return nil
 }
 
-// ExtractFromPtr 若入参指针为nil，则返回空字符串；否则，返回指针指向的内存所存储的字符串。
+// ExtractFromPtr safely dereferences a string pointer, returning empty string for nil.
+// Provides null-safety when working with optional string fields in data structures.
 func ExtractFromPtr(p *string) string {
 	if p == nil {
 		return ""

@@ -1,19 +1,27 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package numeric
 
 import "strconv"
 
-// MustParseUint64 将字符串转换成uint。若转换过程中发生错误，则panic。
+// MustParseUint64 performs null-safe string to uint64 conversion
 func MustParseUint64(s string) uint64 {
 	v, err := strconv.ParseUint(s, 10, 64)
 	if err != nil {
@@ -22,7 +30,7 @@ func MustParseUint64(s string) uint64 {
 	return v
 }
 
-// ParseUint64 将字符串转换成uint64。若转换过程中发生错误，则返回默认值。
+// ParseUint64 provides safe conversion with fallback value
 func ParseUint64(s string, defVal uint64) uint64 {
 	v, err := strconv.ParseUint(s, 10, 64)
 	if err != nil {
@@ -31,7 +39,7 @@ func ParseUint64(s string, defVal uint64) uint64 {
 	return v
 }
 
-// MustParseFloat64 将字符串转换成float64。若转换过程中发生错误，则panic。
+// MustParseFloat64 enforces strict float64 conversion
 func MustParseFloat64(s string) float64 {
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {
@@ -40,7 +48,7 @@ func MustParseFloat64(s string) float64 {
 	return v
 }
 
-// ParseFloat64 将字符串转换成float64。若转换过程中发生错误，则丢弃错误并返回零值。
+// ParseFloat64 implements fault-tolerant float conversion
 func ParseFloat64(s string, defVal float64) float64 {
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {

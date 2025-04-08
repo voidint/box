@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package null
 
@@ -18,9 +26,7 @@ import (
 	"github.com/guregu/null/v5"
 )
 
-// MustIntFromUint64Ptr 若入参为nil，则返回无效的null.Int；
-// 若入参为正整数指针，则返回有效的null.Int；
-// 若入参数值大于math.MaxInt64，则发生panic。
+// MustIntFromUint64Ptr performs null-safe conversion from uint64 pointer to null.Int.
 func MustIntFromUint64Ptr(v *uint64) null.Int {
 	if v == nil {
 		return null.NewInt(0, false)
@@ -31,9 +37,7 @@ func MustIntFromUint64Ptr(v *uint64) null.Int {
 	return null.IntFrom(int64(*v))
 }
 
-// MustIntFromUint32Ptr 若入参为nil，则返回无效的null.Int；
-// 若入参为正整数指针，则返回有效的null.Int；
-// 若入参数值大于math.MaxInt64，则发生panic。
+// MustIntFromUint32Ptr converts uint32 pointer to null.Int with type checking.
 func MustIntFromUint32Ptr(v *uint32) null.Int {
 	if v == nil {
 		return null.NewInt(0, false)
@@ -44,7 +48,7 @@ func MustIntFromUint32Ptr(v *uint32) null.Int {
 	return null.IntFrom(int64(*v))
 }
 
-// TimeFromUnixInt64Ptr 若入参为nil，则返回无效的null.Time；若入参非nil，则返回指定秒（Unix时间戳）的时间。
+// TimeFromUnixInt64Ptr converts a Unix timestamp in seconds to null.Time.
 func TimeFromUnixInt64Ptr(v *int64) null.Time {
 	if v == nil {
 		return null.NewTime(time.Time{}, false)
@@ -52,7 +56,7 @@ func TimeFromUnixInt64Ptr(v *int64) null.Time {
 	return null.TimeFrom(time.Unix(*v, 0))
 }
 
-// TimeFromUnixMilliInt64Ptr 若入参为nil，则返回无效的null.Time；若入参非nil，则返回指定毫秒（Unix时间戳）的时间。
+// TimeFromUnixMilliInt64Ptr converts a Unix timestamp in milliseconds to null.Time.
 func TimeFromUnixMilliInt64Ptr(v *int64) null.Time {
 	if v == nil {
 		return null.NewTime(time.Time{}, false)
@@ -60,7 +64,7 @@ func TimeFromUnixMilliInt64Ptr(v *int64) null.Time {
 	return null.TimeFrom(time.UnixMilli(*v))
 }
 
-// TimeFromUnixMicroInt64Ptr 若入参为nil，则返回无效的null.Time；若入参非nil，则返回指定微秒（Unix时间戳）的时间。
+// TimeFromUnixMicroInt64Ptr converts a Unix timestamp in microseconds to null.Time.
 func TimeFromUnixMicroInt64Ptr(v *int64) null.Time {
 	if v == nil {
 		return null.NewTime(time.Time{}, false)

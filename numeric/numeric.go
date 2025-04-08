@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package numeric
 
@@ -16,7 +24,7 @@ import (
 	"strings"
 )
 
-// PositiveToPtr 若入参v大于零，则返回其指针；否则返回nil。
+// PositiveToPtr returns a pointer to v if it's greater than zero, otherwise returns nil.
 func PositiveToPtr[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~float32 | ~float64](v T) *T {
 	if v > 0 {
 		return &v
@@ -24,7 +32,7 @@ func PositiveToPtr[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~float32 | ~
 	return nil
 }
 
-// PositiveUint8ToUint32Ptr 若参数v大于零，则将其转换成uint32后返回其指针；若参数v等于零，则返回nil。
+// PositiveUint8ToUint32Ptr converts uint8 to uint32 pointer with null-safety.
 func PositiveUint8ToUint32Ptr(v uint8) *uint32 {
 	if v == 0 {
 		return nil
@@ -33,7 +41,7 @@ func PositiveUint8ToUint32Ptr(v uint8) *uint32 {
 	return &ret
 }
 
-// ExtractFromPtr 若入参指针为nil，则返回0；否则，返回指针指向的内存所存储的值。
+// ExtractFromPtr provides null-safe value extraction from pointer.
 func ExtractFromPtr[T ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~float32 | ~float64](p *T) T {
 	if p == nil {
 		return 0
@@ -45,7 +53,7 @@ type Number interface {
 	~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uint | ~int8 | ~int16 | ~int32 | ~int64 | ~int | ~float32 | ~float64
 }
 
-// Join 返回由指定分隔符所连接而成的字符串
+// Join concatenates numeric values into a string with specified separator.
 func Join[T Number](items []T, sep string) string {
 	switch len(items) {
 	case 0:

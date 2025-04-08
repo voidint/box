@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package id
 
@@ -18,14 +26,14 @@ import (
 )
 
 func TestDefaultNode(t *testing.T) {
-	t.Run("默认ID节点生成ID", func(t *testing.T) {
-		t.Run("string类型ID", func(t *testing.T) {
+	t.Run("Default node generates IDs", func(t *testing.T) {
+		t.Run("String type ID", func(t *testing.T) {
 			assert.Equal(t, 19, len(String()))
 			for i := 0; i < 1000; i++ {
 				assert.NotEqual(t, String(), String())
 			}
 		})
-		t.Run("int64类型ID", func(t *testing.T) {
+		t.Run("Int64 type ID", func(t *testing.T) {
 			assert.Equal(t, true, Int64() > 0)
 			for i := 0; i < 100; i++ {
 				assert.NotEqual(t, Int64(), Int64())
@@ -35,8 +43,8 @@ func TestDefaultNode(t *testing.T) {
 }
 
 func TestNewNode(t *testing.T) {
-	t.Run("自定义节点生成ID", func(t *testing.T) {
-		t.Run("节点实例化", func(t *testing.T) {
+	t.Run("Custom node generates IDs", func(t *testing.T) {
+		t.Run("Node instantiation", func(t *testing.T) {
 			node1, err := NewNode(1)
 			assert.Nil(t, err)
 			assert.NotNil(t, node1)
@@ -53,7 +61,7 @@ func TestNewNode(t *testing.T) {
 			assert.Panics(t, func() { MustNewNode(1024) })
 		})
 
-		t.Run("生成ID", func(t *testing.T) {
+		t.Run("ID generation", func(t *testing.T) {
 			node := MustNewNode(1023)
 			assert.NotEmpty(t, node.String())
 			for i := 0; i < 1000; i++ {

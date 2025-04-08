@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package ecache
 
@@ -221,7 +229,7 @@ func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Unsigned](
 		return items, nil
 	}
 
-	// 1. First attempt to retrieve object from cache列表
+	// 1. Attempt to retrieve from cache first
 	key := fmt.Sprintf("%s%citems%c%d", entityKeyPrefix, Delimiter, Delimiter, id)
 
 	data, err := cache.Get(ctx, key)
@@ -237,7 +245,7 @@ func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Unsigned](
 		// If deserialization fails, continue execution flow
 	}
 
-	// 2. Query database for target ID列表
+	// 2. Fallback to database query if cache miss
 	entities, err, _ := singleFlightGroup.Do(key, func() (any, error) {
 		return getEntitiesByID(ctx, id)
 	})
@@ -250,7 +258,7 @@ func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Unsigned](
 		return items, nil
 	}
 
-	// 3、序列化对象列表并存入缓存
+	// 3. Serialize and cache results for future requests
 	if data, err = Marshal(&items); err != nil {
 		return nil, errors.WithStack(err)
 	}

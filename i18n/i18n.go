@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package i18n
 
@@ -23,9 +31,9 @@ import (
 	"golang.org/x/text/language"
 )
 
-var pool sync.Map // 由语言标签及其bundle指针所构成的键值对
+var pool sync.Map // pool maintains loaded language bundles with BCP 47 language tags as keys
 
-// LoadLanguageBundleFromEmbedFS 从'嵌入式文件系统'加载语言包
+// LoadLanguageBundleFromEmbedFS loads localization bundles from embedded filesystem
 func LoadLanguageBundleFromEmbedFS(dirName string, dir embed.FS) (err error) {
 	var filenames []string
 	entries, err := dir.ReadDir(dirName)
@@ -63,7 +71,7 @@ func LoadLanguageBundleFromEmbedFS(dirName string, dir embed.FS) (err error) {
 	return nil
 }
 
-// LoadedLangTags 返回已注册的语言标签
+// LoadedLangTags returns all loaded language tags in BCP 47 format (e.g. "en-US", "zh-CN")
 func LoadedLangTags() (items []string) {
 	pool.Range(func(k, v any) bool {
 		items = append(items, k.(string))
@@ -73,34 +81,38 @@ func LoadedLangTags() (items []string) {
 }
 
 var (
-	// ErrInvalidTemplateData 无效的模板数据
+	// ErrInvalidTemplateData indicates malformed template parameters
+	// Occurs when template data doesn't form valid key-value pairs
 	ErrInvalidTemplateData = errors.New("invalid template data")
 )
 
-// TrNoErr 将指定ID的文本翻译成对应语言的文本。若发生错误导致翻译失败，则返回入参的messageID。
+// TrNoErr returns localized string or original messageID on failure
 func TrNoErr(lang string, messageID string, tplData ...any) string {
 	s, _ := Tr(lang, messageID, tplData...)
 	return s
 }
 
-// DefaultLang 默认语言标签
+// DefaultLang defines fallback language (Simplified Chinese)
+// Used when requested language isn't available in localization bundles
 const DefaultLang = "zh-Hans"
 
-// Tr 将指定ID的文本翻译成对应语言的文本。若发生错误导致翻译失败，则返回入参的messageID和具体的错误。
+// Tr performs localization with detailed error reporting
 func Tr(lang string, messageID string, tplData ...any) (string, error) {
-	// 1、规整语言标签。lang参数标准为 http://www.iana.org/assignments/language-subtag-registry/language-subtag-registry 中所定义的语言标签
+	// Normalize language tag according to IANA registry
+	// Ref: https://www.iana.org/assignments/language-subtag-registry
 	if lang == "" {
 		lang = DefaultLang
 	}
-	// 2、查找语言包
+	// Retrieve corresponding localization bundle
+	// Fallback to DefaultLang bundle if not found
 	bundle, err := findBundle(lang)
-	if err == ErrBundleNotFound && lang != DefaultLang { // 若该语种暂未支持，则使用简体中文。
+	if err == ErrBundleNotFound && lang != DefaultLang { // Fallback to DefaultLang if requested language is unavailable
 		bundle, err = findBundle(DefaultLang)
 	}
 	if err != nil {
 		return messageID, err
 	}
-	// 3、翻译
+	// Localize message with template data validation
 	c := i18n.LocalizeConfig{
 		MessageID: messageID,
 	}
@@ -110,7 +122,7 @@ func Tr(lang string, messageID string, tplData ...any) (string, error) {
 		}
 		pairs := make(map[string]any, len(tplData)/2)
 		for i := 0; i < len(tplData)-1; i = i + 2 {
-			k, ok := tplData[i].(string) // 键为字符串类型，指代的是模板变量名。
+			k, ok := tplData[i].(string) // Key must be string type representing template variable name
 			if !ok {
 				return messageID, ErrInvalidTemplateData
 			}
@@ -126,7 +138,8 @@ func Tr(lang string, messageID string, tplData ...any) (string, error) {
 }
 
 var (
-	// ErrBundleNotFound bundle不存在
+	// ErrBundleNotFound indicates missing localization bundle
+	// Triggered when requested language tag has no registered bundle
 	ErrBundleNotFound = errors.New("bundle not found")
 )
 

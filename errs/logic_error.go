@@ -1,13 +1,21 @@
-// Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+// Copyright (c) 2025 voidint <voidint@126.com>
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package errs
 
@@ -18,24 +26,24 @@ import (
 	"github.com/voidint/box/i18n"
 )
 
-// LogicError 业务逻辑错误
+// LogicError represents a business logic error with code mapping and localization support
 type LogicError struct {
 	code    int16
 	message string
 	cause   error
 }
 
-// Code 返回错误编码
+// Code returns the HTTP status code mapped to this business error
 func (e LogicError) Code() int16 {
 	return e.code
 }
 
-// Message 返回错误信息
+// Message returns the localized error message for client presentation
 func (e LogicError) Message() string {
 	return e.message
 }
 
-// Error 实现Error方法
+// Error implements error interface with formatted error details
 func (e LogicError) Error() string {
 	if e.cause == nil {
 		return fmt.Sprintf("[%d]%s", e.code, e.message)
@@ -43,13 +51,13 @@ func (e LogicError) Error() string {
 	return fmt.Sprintf("[%d]%s\n%+v", e.code, e.message, e.cause)
 }
 
-// SetCause 设置根因
+// SetCause attaches the root cause error for debugging purposes
 func (e *LogicError) SetCause(err error) *LogicError {
 	e.cause = err
 	return e
 }
 
-// GetCause 返回根因错误
+// GetCause retrieves the underlying error that triggered this business error
 func (e *LogicError) GetCause() error {
 	return e.cause
 }
@@ -60,7 +68,7 @@ func WithCause(err error) func(*LogicError) {
 	}
 }
 
-// NewRawLogicErr 返回指定编码的业务逻辑错误
+// NewRawLogicErr creates a business error with raw message (non-localized)
 func NewRawLogicErr(code int16, message string, opts ...func(*LogicError)) *LogicError {
 	one := LogicError{
 		code:    code,
@@ -72,7 +80,7 @@ func NewRawLogicErr(code int16, message string, opts ...func(*LogicError)) *Logi
 	return &one
 }
 
-// NewLogicErr 返回指定编码的业务逻辑错误
+// NewLogicErr creates a localized business error using i18n message ID
 func NewLogicErr(code int16, lang string, messageID string, tplData ...any) *LogicError {
 	msg, err := i18n.Tr(lang, messageID, tplData...)
 	if err != nil {
@@ -81,32 +89,37 @@ func NewLogicErr(code int16, lang string, messageID string, tplData ...any) *Log
 	return NewRawLogicErr(code, msg)
 }
 
-// New400LogicError 返回400错误（非法参数）
+// New400LogicError creates Bad Request error (HTTP 400)
+// Typically indicates invalid request parameters or malformed input
 func New400LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusBadRequest, lang, messageID, tplData...)
 }
 
-// New401LogicError 返回401错误（未认证）
+// New401LogicError creates Unauthorized error (HTTP 401)
+// Indicates missing or invalid authentication credentials
 func New401LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusUnauthorized, lang, messageID, tplData...)
 }
 
-// New403LogicError 返回403错误（未授权）
+// New403LogicError creates Forbidden error (HTTP 403)
+// The client lacks sufficient permissions for the requested operation
 func New403LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusForbidden, lang, messageID, tplData...)
 }
 
-// New404LogicError 返回404错误（资源不存在）
+// New404LogicError creates Not Found error (HTTP 404)
+// Specified resource does not exist in the system
 func New404LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusNotFound, lang, messageID, tplData...)
 }
 
-// New500LogicError 返回500错误（服务器内部错误）
+// New500LogicError creates Internal Server Error (HTTP 500)
+// Reserved for unexpected server-side failures
 func New500LogicError(lang string, messageID string, tplData ...any) *LogicError {
 	return NewLogicErr(http.StatusInternalServerError, lang, messageID, tplData...)
 }
 
-// IsServerError 返回是否是服务端错误的布尔值
+// IsServerError checks if the error represents a server-side issue (HTTP 5xx)
 func IsServerError(err error) bool {
 	if err == nil {
 		return false
