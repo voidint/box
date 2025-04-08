@@ -8,13 +8,13 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/dromara/carbon/v2 v2.5.2
 	github.com/guregu/null/v5 v5.0.0
-	github.com/nicksnyder/go-i18n/v2 v2.6.0
+	github.com/nicksnyder/go-i18n/v2 v2.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/exp v0.0.0-20230224173230-c95f2b4c22f2
-	golang.org/x/sync v0.13.0
-	golang.org/x/text v0.24.0
+	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e
+	golang.org/x/sync v0.11.0
+	golang.org/x/text v0.22.0
 )
 
 require (
