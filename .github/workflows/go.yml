@@ -1,3 +1,14 @@
+# Copyright (c) 2025 voidint <voidint@126.com>. All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
@@ -23,15 +34,18 @@ jobs:
     
     - name: Install dependencies
       run: |
-        go get github.com/BurntSushi/toml@v1.2.1
+        go get github.com/BurntSushi/toml@v1.5.0
+        go get github.com/alicebob/miniredis/v2@v2.34.0
         go get github.com/bwmarrin/snowflake@v0.3.0
-        go get github.com/dromara/carbon/v2@v2.2.3
-        go get github.com/nicksnyder/go-i18n/v2@v2.2.1
-        go get github.com/stretchr/testify@v1.8.1
-        go get golang.org/x/exp
-        go get golang.org/x/text@v0.7.0
-        go get google.golang.org/grpc@v1.53.0
-        go get gopkg.in/guregu/null.v4@v4.0.0
+        go get github.com/dromara/carbon/v2@v2.5.2
+        go get github.com/guregu/null/v5@v5.0.0
+        go get github.com/nicksnyder/go-i18n/v2@v2.5.1
+        go get github.com/patrickmn/go-cache@v2.1.0+incompatible
+        go get github.com/pkg/errors@v0.9.1
+        go get github.com/redis/go-redis/v9@v9.7.3
+        go get github.com/stretchr/testify@v1.10.0
+        go get golang.org/x/sync@v0.11.0
+        go get golang.org/x/text@v0.22.0
 
     - name: Build
       run: go build -v ./...
