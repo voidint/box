@@ -34,18 +34,8 @@ jobs:
     
     - name: Install dependencies
       run: |
-        go get github.com/BurntSushi/toml@v1.5.0
-        go get github.com/alicebob/miniredis/v2@v2.34.0
-        go get github.com/bwmarrin/snowflake@v0.3.0
-        go get github.com/dromara/carbon/v2@v2.5.2
-        go get github.com/guregu/null/v5@v5.0.0
-        go get github.com/nicksnyder/go-i18n/v2@v2.5.1
-        go get github.com/patrickmn/go-cache@v2.1.0+incompatible
-        go get github.com/pkg/errors@v0.9.1
-        go get github.com/redis/go-redis/v9@v9.7.3
-        go get github.com/stretchr/testify@v1.10.0
-        go get golang.org/x/sync@v0.11.0
-        go get golang.org/x/text@v0.22.0
+        go mod download
+        go mod tidy
 
     - name: Build
       run: go build -v ./...
