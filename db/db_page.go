@@ -1,23 +1,23 @@
 package db
 
 import (
-	"golang.org/x/exp/constraints"
+	"github.com/voidint/box/constraints"
 )
 
 // WithMaxPageSize 设置分页大小上限阈值
-func WithMaxPageSize[INT constraints.Integer](maxPageSize INT) func(*Page[INT]) {
+func WithMaxPageSize[INT constraints.Unsigned](maxPageSize INT) func(*Page[INT]) {
 	return func(pg *Page[INT]) {
 		pg.maxPageSize = maxPageSize
 	}
 }
 
 // Page 分页
-type Page[INT constraints.Integer] struct {
+type Page[INT constraints.Unsigned] struct {
 	pageNo, pageSize, maxPageSize INT
 }
 
 // NewPage 返回分页实例
-func NewPage[INT constraints.Integer](pageNo, pageSize INT, opts ...func(*Page[INT])) (pg *Page[INT]) {
+func NewPage[INT constraints.Unsigned](pageNo, pageSize INT, opts ...func(*Page[INT])) (pg *Page[INT]) {
 	pg = &Page[INT]{
 		pageNo:   pageNo,
 		pageSize: pageSize,

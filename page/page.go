@@ -1,17 +1,12 @@
 package page
 
 import (
+	"github.com/voidint/box/constraints"
 	"github.com/voidint/box/db"
-	"golang.org/x/exp/constraints"
 )
 
-// Integer 整型类型约束
-type Integer interface {
-	constraints.Integer
-}
-
 // Page 分页结构定义
-type Page[T any, INT Integer] struct {
+type Page[T any, INT constraints.Unsigned] struct {
 	PageNo       INT `json:"pageNo"` // 若序列化时想要使用其他的命名风格，建议使用 github.com/json-iterator/go 库中的 extra.SetNamingStrategy() 函数注册自定义命名策略。
 	PageSize     INT `json:"pageSize"`
 	TotalPages   INT `json:"totalPages"`
@@ -20,14 +15,14 @@ type Page[T any, INT Integer] struct {
 }
 
 // Pager 分页接口
-type Pager[T any, INT Integer] interface {
+type Pager[T any, INT constraints.Unsigned] interface {
 	AddRecords(records ...T)
 	BuildDBPage() *db.Page[INT]
 	BuildPage() *Page[T, INT]
 }
 
 // NewPager 构建一个分页对象
-func NewPager[T any, INT Integer](pageNo, pageSize, totalRecords INT) Pager[T, INT] {
+func NewPager[T any, INT constraints.Unsigned](pageNo, pageSize, totalRecords INT) Pager[T, INT] {
 	if pageNo <= 0 {
 		pageNo = 1
 	}
@@ -52,7 +47,7 @@ func NewPager[T any, INT Integer](pageNo, pageSize, totalRecords INT) Pager[T, I
 }
 
 // pagerImpl 实际的分页对象
-type pagerImpl[T any, INT Integer] struct {
+type pagerImpl[T any, INT constraints.Unsigned] struct {
 	pageNo       INT
 	pageSize     INT
 	totalPages   INT
@@ -82,7 +77,7 @@ func (p *pagerImpl[T, INT]) BuildPage() *Page[T, INT] {
 }
 
 // EmptyPage 返回空分页
-func EmptyPage[T any, INT Integer](pageNo, pageSize INT) *Page[T, INT] {
+func EmptyPage[T any, INT constraints.Unsigned](pageNo, pageSize INT) *Page[T, INT] {
 	return &Page[T, INT]{
 		PageNo:       pageNo,
 		PageSize:     pageSize,
@@ -93,7 +88,7 @@ func EmptyPage[T any, INT Integer](pageNo, pageSize INT) *Page[T, INT] {
 }
 
 // mustCalculateTotalPages 计算总分页数
-func mustCalculateTotalPages[INT Integer](pageSize, totalRecords INT) (totalPages INT) {
+func mustCalculateTotalPages[INT constraints.Unsigned](pageSize, totalRecords INT) (totalPages INT) {
 	if pageSize <= 0 {
 		panic("page size should be positive integer")
 	}

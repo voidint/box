@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/voidint/box/constraints"
 	"golang.org/x/sync/singleflight"
 )
 
@@ -105,16 +106,12 @@ type Cache interface {
 	IsKeyNotFound(err error) bool
 }
 
-type UnsignedInt interface {
-	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
-}
-
 // CacheableEntity defines the contract for cacheable domain entities
 // Used to enforce ID-based caching constraints
 // Implementations should:
 // - Use unsigned integer types for identifiers
 // - Maintain immutable ID properties
-type CacheableEntity[INT UnsignedInt] interface {
+type CacheableEntity[INT constraints.Unsigned] interface {
 	ID() INT
 }
 
@@ -137,7 +134,7 @@ func DelCachedEntity(ctx context.Context, cache Cache, key string) (affected int
 //
 // The cache-aside pattern prevents stale cache returns while
 // singleflight prevents cache stampede
-func GetEntityByID[T CacheableEntity[INT], INT UnsignedInt](
+func GetEntityByID[T CacheableEntity[INT], INT constraints.Unsigned](
 	ctx context.Context,
 	cache Cache,
 	entityKeyPrefix string,
@@ -195,7 +192,7 @@ func GetEntityByID[T CacheableEntity[INT], INT UnsignedInt](
 // 1. Batch cache lookup with singleflight deduplication
 // 2. Database fallback on cache miss
 // 3. Cache population with serialized results
-func GetEntitiesByID[T CacheableEntity[INT], INT UnsignedInt](
+func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Unsigned](
 	ctx context.Context,
 	cache Cache,
 	entityKeyPrefix string,
@@ -258,7 +255,7 @@ func GetEntitiesByID[T CacheableEntity[INT], INT UnsignedInt](
 // - String or unsigned integer types
 // - Single-field uniqueness (composite keys not supported)
 type UniqueKey interface {
-	~string | UnsignedInt
+	~string | constraints.Unsigned
 }
 
 // GetEntityByUniqueKey implements two-level cache resolution:
@@ -270,7 +267,7 @@ type UniqueKey interface {
 // Limitations:
 // - Composite unique keys not supported
 // - Fixed cache key format
-func GetEntityByUniqueKey[T CacheableEntity[INT], INT UnsignedInt, UK UniqueKey](
+func GetEntityByUniqueKey[T CacheableEntity[INT], INT constraints.Unsigned, UK UniqueKey](
 	ctx context.Context,
 	cache Cache,
 	entityKeyPrefix string,

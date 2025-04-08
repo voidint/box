@@ -8,17 +8,17 @@ import (
 
 func TestPage(t *testing.T) {
 	for _, item := range []struct {
-		PageNo       int
-		PageSize     int
-		TotalRecords int
-		TotalPages   int
-		Offset       int
-		Records      []int
+		PageNo       uint64
+		PageSize     uint64
+		TotalRecords uint64
+		TotalPages   uint64
+		Offset       uint64
+		Records      []uint64
 	}{
 		{PageNo: 1, PageSize: 10, TotalRecords: 100, TotalPages: 10, Offset: 0},
 		{PageNo: 2, PageSize: 3, TotalRecords: 7, TotalPages: 3, Offset: 3},
 	} {
-		pgr := NewPager[int](item.PageNo, item.PageSize, item.TotalRecords)
+		pgr := NewPager[uint64](item.PageNo, item.PageSize, item.TotalRecords)
 
 		pg := pgr.BuildPage()
 		assert.NotNil(t, pg)
@@ -35,9 +35,9 @@ func TestPage(t *testing.T) {
 
 func TestMustCalculateTotalPages(t *testing.T) {
 	for _, item := range []struct {
-		PageSize     int
-		TotalRecords int
-		TotalPages   int
+		PageSize     uint64
+		TotalRecords uint64
+		TotalPages   uint64
 		Panic        bool
 	}{
 		{PageSize: 10, TotalRecords: 10, TotalPages: 1},
@@ -45,7 +45,6 @@ func TestMustCalculateTotalPages(t *testing.T) {
 		{PageSize: 3, TotalRecords: 10, TotalPages: 4},
 		{PageSize: 3, TotalRecords: 0, TotalPages: 0},
 		{PageSize: 0, TotalRecords: 10, TotalPages: 0, Panic: true},
-		{PageSize: 10, TotalRecords: -1, TotalPages: 0, Panic: true},
 	} {
 		if item.Panic {
 			assert.Panics(t, func() {
