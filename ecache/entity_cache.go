@@ -18,8 +18,8 @@ var (
 	Marshal func(v any) ([]byte, error) = json.Marshal
 	// Unmarshal 默认反序列化方案
 	Unmarshal func(data []byte, v any) error = json.Unmarshal
-	// Expiration 缓存默认过期时间
-	Expiration time.Duration
+	// DefaultExpiration 缓存默认过期时间
+	DefaultExpiration time.Duration = time.Hour * 24
 	// Disabled 缓存开关
 	Disabled bool
 	// 缓存键名分隔符
@@ -99,7 +99,7 @@ func GetEntityByID[T CacheableEntity[INT], INT constraints.Integer](
 	if data, err = Marshal(entity); err != nil {
 		return nil, errors.WithStack(err)
 	}
-	if err = cache.Set(ctx, key, data, Expiration); err != nil {
+	if err = cache.Set(ctx, key, data, DefaultExpiration); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -159,7 +159,7 @@ func GetEntitiesByID[T CacheableEntity[INT], INT constraints.Integer](
 	if data, err = Marshal(&items); err != nil {
 		return nil, errors.WithStack(err)
 	}
-	if err = cache.Set(ctx, key, data, Expiration); err != nil {
+	if err = cache.Set(ctx, key, data, DefaultExpiration); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
