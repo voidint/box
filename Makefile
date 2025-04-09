@@ -13,7 +13,7 @@ lint:
 	gosec -quiet ./...
 
 addlicense:
-	addlicense -v -c "voidint <voidint@126.com>" -l mit .
+	addlicense -v -c "voidint <voidint@126.com>" -l mit -ignore 'vendor/**' -ignore '.github/**' -ignore '.vscode/**' -ignore '.idea/**' .
 
 install-tools:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
