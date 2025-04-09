@@ -25,7 +25,10 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
+	"github.com/voidint/box/ecache"
 )
+
+var _ ecache.Cache = (*cache)(nil) // Ensure cache implements ecache.Cache interface.
 
 // cache implements Redis-based caching solution.
 // It wraps go-redis client to provide standard cache interface.

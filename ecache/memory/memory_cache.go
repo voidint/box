@@ -25,6 +25,7 @@ import (
 
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/pkg/errors"
+	"github.com/voidint/box/ecache"
 )
 
 var (
@@ -34,6 +35,8 @@ var (
 	// ErrUnexpectedType occurs when attempting to retrieve data with unexpected type
 	ErrUnexpectedType = errors.New("unknown data type")
 )
+
+var _ ecache.Cache = (*cache)(nil) // Ensure cache implements ecache.Cache interface.
 
 type cache struct {
 	db *gocache.Cache
