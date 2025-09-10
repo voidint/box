@@ -28,3 +28,12 @@ func InSlice[T comparable](v T, items []T) bool {
 	}
 	return false
 }
+
+// EmptySliceIfNil checks if the given slice is nil. If it is, it returns an empty slice of the same type.
+// Otherwise, it returns the original slice.
+func EmptySliceIfNil[T any](src []T) (dst []T) {
+	if src == nil {
+		return make([]T, 0)
+	}
+	return src
+}
